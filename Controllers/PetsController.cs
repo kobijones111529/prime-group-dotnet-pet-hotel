@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PetHotel.Models;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace PetHotel.Controllers;
 
@@ -25,31 +26,65 @@ public class PetsController : ControllerBase
     [HttpGet]
     public IEnumerable<Pet> GetPets()
     {
-        return new List<Pet>();
+        return _context.Pets;
     }
 
-    // [HttpGet]
-    // [Route("test")]
-    // public IEnumerable<Pet> GetPets() {
-    //     PetOwner blaine = new PetOwner{
-    //         name = "Blaine"
-    //     };
+    [HttpGet("{id}")]
+    public ActionResult<Pet> GetPet(int id)
+    {
+        Pet petWeWant = _context.Pets.SingleOrDefault(pet => pet.Id == id);
 
-    //     Pet newPet1 = new Pet {
-    //         name = "Big Dog",
-    //         petOwner = blaine,
-    //         color = PetColorType.Black,
-    //         breed = PetBreedType.Poodle,
-    //     };
+        if (petWeWant is null)
+        {
+            return NotFound();
+        }
 
-    //     Pet newPet2 = new Pet {
-    //         name = "Little Dog",
-    //         petOwner = blaine,
-    //         color = PetColorType.Golden,
-    //         breed = PetBreedType.Labrador,
-    //     };
+        return petWeWant;
+    }
 
-    //     return new List<Pet>{ newPet1, newPet2};
-    // }
+    [HttpPost]
+    public Pet CreatePet(Pet newPet)
+    {
+        _context.Add(newPet);
+        _context.SaveChanges();
+        return newPet;
+    }
+
+    [HttpPut("{id}")]
+    public Pet Put(int id, Pet pet)
+    {
+        pet.Id = id;
+
+        _context.Update(pet);
+
+        _context.SaveChanges();
+
+        return pet;
+    }
+
+
 }
 
+// [HttpGet]
+// [Route("test")]
+// public IEnumerable<Pet> GetPets() {
+//     PetOwner blaine = new PetOwner{
+//         name = "Blaine"
+//     };
+
+//     Pet newPet1 = new Pet {
+//         name = "Big Dog",
+//         petOwner = blaine,
+//         color = PetColorType.Black,
+//         breed = PetBreedType.Poodle,
+//     };
+
+//     Pet newPet2 = new Pet {
+//         name = "Little Dog",
+//         petOwner = blaine,
+//         color = PetColorType.Golden,
+//         breed = PetBreedType.Labrador,
+//     };
+
+//     return new List<Pet>{ newPet1, newPet2};
+// }

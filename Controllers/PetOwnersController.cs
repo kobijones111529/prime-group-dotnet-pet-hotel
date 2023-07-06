@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using PetHotel.Models;
 using Microsoft.EntityFrameworkCore;
@@ -17,11 +18,47 @@ public class PetOwnersController : ControllerBase
         _context = context;
     }
 
-    // This is just a stub for GET / to prevent any weird frontend errors that 
-    // occur when the route is missing in this controller
     [HttpGet]
-    public IEnumerable<PetOwner> GetPets()
+    public IEnumerable<ExistingPetOwner> GetPets()
     {
-        return new List<PetOwner>();
+        return _context.PetOwners;
     }
+
+    [HttpGet("{id}")]
+    public ActionResult<ExistingPetOwner> GetbyId(int id)
+    {
+        ExistingPetOwner petOwnerWeWant = _context.PetOwners.SingleOrDefault(petOwner => petOwner.Id == id);
+
+        if (petOwnerWeWant is null)
+        {
+            return NotFound();
+        }
+
+        return petOwnerWeWant;
+    }
+
+    [HttpPost]
+    public IActionResult Post(PetOwner petOwner)
+    {
+        ExistingPetOwner newPetOwner = new ExistingPetOwner(petOwner);
+        _context.Add(newPetOwner);
+        _context.SaveChanges();
+        return CreatedAtAction(nameof(GetbyId), new { id = newPetOwner.Id }, newPetOwner);
+    }
+
+    // private ActionResult<ExistingPetOwner> ActuallyPost(ExistingPetOwner petOwner) {
+    //     _context.Add(new ExistingPetOwner(petOwner));
+    //     _context.SaveChanges();
+    //     return Created("/api/PetOwner", petOwner);
+    // }
+
+    // [HttpPost]
+    // public ActionResult<ExistingPetOwner> Post(PetOwner petOwner)
+    // {
+    //     return ActuallyPost(new ExistingPetOwner(petOwner));
+
+    //     // _context.Add(new ExistingPetOwner(petOwner));
+    //     // _context.SaveChanges();
+    //     // return Created("/api/PetOwner", petOwner);
+    // }
 }

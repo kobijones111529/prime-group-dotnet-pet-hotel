@@ -22,6 +22,9 @@ namespace PetHotel.Models;
 
 public class ApplicationContext : DbContext
 {
-    public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) {}
-    // public DbSet<MyClass> MyClassTable { get; set; }
+    public DbSet<ExistingPetOwner> PetOwners { get; set; }
+
+    public DbSet<Pet> Pets { get; set; }
+
+    public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
 }
