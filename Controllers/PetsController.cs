@@ -5,10 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using pet_hotel.Models;
+using PetHotel.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace pet_hotel.Controllers
+namespace PetHotel.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

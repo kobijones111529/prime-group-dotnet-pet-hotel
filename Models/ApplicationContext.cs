@@ -17,7 +17,7 @@
 
     This class gets added to Entity during the system setup. See Startup.cs.
 */
-namespace pet_hotel.Models
+namespace PetHotel.Models
 {
     public class ApplicationContext : DbContext
     {
